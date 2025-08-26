@@ -1,9 +1,10 @@
 <?php
 $projectName = getenv('PROJECT_NAME') ?: 'Тестовый проект';
+$webserver = getenv('WEB_SERVER');
 
 echo "<h1>🚀 {$projectName}</h1>";
 echo "<p><strong>Версия PHP:</strong> " . phpversion() . "</p>";
-
+echo "<p><strong>WEB-сервер:</strong> " . $webserver . "</p>";
 // Тест подключения к БД
 try {
     $dbHost = getenv('DB_HOST');
