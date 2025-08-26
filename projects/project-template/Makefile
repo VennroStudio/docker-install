@@ -25,9 +25,9 @@ check-infrastructure:
 
 # Создание БД в общей MariaDB
 create-db-if-shared:
-ifeq ($(USE_SHARED_DB),true)
+ifeq ($(USE_SHARED_SERVICES),true)
 	@echo "🗄️ Создание БД $(DB_NAME) в общей MariaDB..."
-	@docker exec infrastructure-mariadb mysql -u root -p$(SHARED_DB_ROOT_PASSWORD) \
+	@docker exec ${SHARED_DB_HOST} mysql -u root -p$(SHARED_DB_ROOT_PASSWORD) \
 		-e "CREATE DATABASE IF NOT EXISTS $(DB_NAME);" \
 		-e "CREATE USER IF NOT EXISTS '$(DB_USER)'@'%' IDENTIFIED BY '$(DB_PASSWORD)';" \
 		-e "GRANT ALL PRIVILEGES ON $(DB_NAME).* TO '$(DB_USER)'@'%';" \
