@@ -48,6 +48,7 @@ services:
       - "${SHARED_DB_PORT}:3306"
     volumes:
       - shared-mariadb-data:/var/lib/mysql
+      - ./mariadb/init-shared.sql:/docker-entrypoint-initdb.d/init-shared.sql:ro
     networks:
       - shared-services
     command: >
