@@ -52,5 +52,4 @@ shell-php:
 info:
 	@echo "✅ Проект $(PROJECT_NAME) запущен!"
 	@echo "🌐 URL: https://$(PROJECT_DOMAIN)"
-	@echo "🗄️ БД: $(if $(filter true,$(USE_SHARED_DB)),общая,собственная)"
 	@echo "🌍 Веб-сервер: $(WEB_SERVER)"

@@ -40,7 +40,7 @@ services:
     profiles: ["shared-db"]
     image: mariadb:10.6
     container_name: ${INFRA_NAME}-mariadb
-    restart: unless-stopped
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${SHARED_DB_ROOT_PASSWORD}
       TZ: ${TIMEZONE}
@@ -62,7 +62,7 @@ services:
     image: phpmyadmin:latest
     platform: linux/amd64
     container_name: ${INFRA_NAME}-phpmyadmin
-    restart: unless-stopped
+    restart: always
     environment:
       PMA_HOST: ${INFRA_NAME}-mariadb
       #PMA_USER: root
