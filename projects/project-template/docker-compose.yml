@@ -1,10 +1,6 @@
-# =======================================================  
-# ПРОЕКТ С ПОДДЕРЖКОЙ ОБЩИХ СЕРВИСОВ
-# =======================================================
-
 services:
 
-  # PHP-FPM (всегда собственный)
+  # PHP-FPM
   php-fpm:
     build:
       context: ./php
@@ -18,27 +14,25 @@ services:
     environment:
       - TIMEZONE=${TIMEZONE}
       - PROJECT_NAME=${PROJECT_NAME}
-      # Подключение к БД (общей или собственной)
-      - DB_HOST=${USE_SHARED_DB:+${SHARED_DB_HOST}}${USE_SHARED_DB:-${PROJECT_NAME}-mariadb}
+      # Подключение к БД
+      - DB_HOST=${SHARED_DB_HOST}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      # Подключение к Redis (общему или собственному)  
-      - REDIS_HOST=${USE_SHARED_REDIS:+${SHARED_REDIS_HOST}}${USE_SHARED_REDIS:-${PROJECT_NAME}-redis}
-      - REDIS_PORT=${USE_SHARED_REDIS:+${SHARED_REDIS_PORT}}${USE_SHARED_REDIS:-6379}
+      # Подключение к Redis
+      #- REDIS_HOST=${SHARED_REDIS_HOST}
+      #- REDIS_PORT=${SHARED_REDIS_PORT}
       # Настройки почты
-      - MAIL_HOST=${USE_SHARED_MAILHOG:+${SHARED_MAILHOG_HOST}}${USE_SHARED_MAILHOG:-${PROJECT_NAME}-mailhog}
-      - MAIL_PORT=${USE_SHARED_MAILHOG:+${SHARED_MAILHOG_PORT}}${USE_SHARED_MAILHOG:-1025}
+      #- MAIL_HOST=${SHARED_MAILHOG_HOST}
+      #- MAIL_PORT=${SHARED_MAILHOG_PORT}
     networks:
       - project-internal
-      # Подключение к общим сервисам если используются
-      - ${USE_SHARED_DB:+shared-services}
-      - ${USE_SHARED_REDIS:+shared-services}
-      - ${USE_SHARED_MAILHOG:+shared-services}
+      # Подключение к общим сервисам
+      - ${USE_SHARED_SERVICES:+shared-services}
     env_file:
       - .env
 
-  # Apache веб-сервер (условно включается)
+  # Apache веб-сервер
   apache:
     profiles: ["apache"]
     build: ./apache
@@ -70,7 +64,7 @@ services:
       - traefik.http.routers.${PROJECT_NAME}.tls.certResolver=letsEncrypt
       - traefik.http.services.${PROJECT_NAME}.loadBalancer.server.port=80
 
-  # Nginx веб-сервер (условно включается) 
+  # Nginx веб-сервер
   nginx:
     profiles: ["nginx"]
     build: ./nginx
@@ -103,14 +97,14 @@ services:
       - traefik.http.routers.${PROJECT_NAME}.tls.certResolver=letsEncrypt
       - traefik.http.services.${PROJECT_NAME}.loadBalancer.server.port=80
 
-# ✅ ИСПРАВЛЕНО: Внешние сети
+  # Общие сети
 networks:
   traefik-public:
     external: true
   shared-services:
     external: true
 
-  # Приватная сеть проекта  
+  # Приватная сеть
   project-internal:
     name: ${PROJECT_NAME}_internal
     driver: bridge

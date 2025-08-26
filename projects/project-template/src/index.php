@@ -1,22 +1,19 @@
 <?php
-$projectName = $_ENV['PROJECT_NAME'] ?? 'Test Project';
-$useSharedDb = $_ENV['USE_SHARED_DB'] ?? 'false';
+$projectName = getenv('PROJECT_NAME') ?: 'Тестовый проект';
 
 echo "<h1>🚀 {$projectName}</h1>";
-echo "<p>Multi-Project Docker Architecture</p>";
-echo "<p><strong>Shared DB:</strong> " . ($useSharedDb === 'true' ? '✅ Yes' : '❌ No') . "</p>";
-echo "<p><strong>PHP Version:</strong> " . phpversion() . "</p>";
+echo "<p><strong>Версия PHP:</strong> " . phpversion() . "</p>";
 
 // Тест подключения к БД
 try {
-    $dbHost = $_ENV['DB_HOST'] ?? 'localhost';
-    $dbName = $_ENV['DB_NAME'] ?? 'test';
-    $dbUser = $_ENV['DB_USER'] ?? 'root';
-    $dbPass = $_ENV['DB_PASSWORD'] ?? '';
+    $dbHost = getenv('DB_HOST');
+    $dbName = getenv('DB_NAME');
+    $dbUser = getenv('DB_USER');
+    $dbPass = getenv('DB_PASSWORD');
 
     $pdo = new PDO("mysql:host={$dbHost};dbname={$dbName}", $dbUser, $dbPass);
-    echo "<p style='color:green'>✅ Database connected: {$dbHost}</p>";
+    echo "<p style='color:green'>✅ База данных подключена: {$dbHost}</p>";
 } catch (Exception $e) {
-    echo "<p style='color:red'>❌ Database error: " . $e->getMessage() . "</p>";
+    echo "<p style='color:red'>❌ Ошибка базы данных: " . $e->getMessage() . "</p>";
 }
 ?>

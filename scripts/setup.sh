@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Скрипт первоначальной настройки multi-project архитектуры
-
 set -e
 
 echo "🏗️ Настройка Docker Multi-Project Architecture"

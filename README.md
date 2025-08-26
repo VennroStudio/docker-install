@@ -1,9 +1,8 @@
-# 🏗️ Docker Multi-Project Architecture (NETWORK FIXED)
+# 🏗️ Docker Multi-Project Architecture
 
 ## 🔧 ИСПРАВЛЕНИЯ
 
-Исправлены критические ошибки сетей:
-- ✅ Убран устаревший `version: 3.8`
+Исправлены критические ошибки:
 - ✅ Сети помечены как `external: true` 
 - ✅ Добавлена команда очистки проблемных сетей
 - ✅ Исправлена совместимость с macOS
@@ -12,11 +11,13 @@
 
 ```bash
 # 1. Настройка
-unzip docker-multi-project-NETWORK-FIXED.zip
-cd docker-multi-project
+git clone https://github.com/VennroStudio/docker-install
+cd docker-install
+chmod +x ./scripts/setup.sh
 ./scripts/setup.sh
 
 # 2. Создание проекта
+chmod +x ./scripts/new-project.sh
 ./scripts/new-project.sh myproject myproject.local nginx
 
 # 3. Настройка hosts (macOS)
@@ -34,18 +35,16 @@ open https://myproject.local
 
 - 🚀 **Ваш проект**: https://myproject.local
 - 📊 **Traefik Dashboard**: http://localhost:8080
-- 🗄️ **phpMyAdmin** (если запущена общая БД): https://pma.shared.local
+- 🗄️ **phpMyAdmin**: https://pma.shared.local
 
 ## 🛠️ Команды
 
 ```bash
-# Infrastructure
-make -C infrastructure init        # Только Traefik
-make -C infrastructure up-shared-db # + общая БД
-
 # Проекты
 cd projects/PROJECT_NAME
-make init                          # Запуск проекта
+make init                         # Запуск проекта
+make up                           # Старт
+make down                         # Отключить
 make logs                         # Просмотр логов
 make shell-php                    # Подключение к PHP
 
@@ -54,16 +53,3 @@ make shell-php                    # Подключение к PHP
 ./scripts/new-project.sh blog blog.local nginx
 ```
 
-## 🎯 Решение ошибок
-
-Если возникают проблемы с сетями:
-
-```bash
-# Полная переустановка infrastructure
-make -C infrastructure reinstall
-
-# Очистка всех сетей Docker
-docker network prune -f
-```
-
-**Теперь все работает корректно!** 🎉

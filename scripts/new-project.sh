@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Скрипт создания нового проекта из шаблона
-
 set -e
 
 if [ "$#" -lt 1 ]; then
@@ -19,7 +17,7 @@ echo "======================================"
 
 # Проверяем что мы в правильной директории
 if [ ! -d "projects/project-template" ]; then
-    echo "❌ Ошибка: выполните скрипт из корневой папки docker-multi-project"
+    echo "❌ Ошибка: выполните скрипт из корневой папки"
     exit 1
 fi
 
@@ -45,7 +43,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     sed -i '' "s/WEB_SERVER=apache/WEB_SERVER=$WEB_SERVER/" .env
     sed -i '' "s/project1_db/${PROJECT_NAME}_db/" .env
     sed -i '' "s/project1_user/${PROJECT_NAME}_user/" .env
-    sed -i '' "s/project1_password_2024/${PROJECT_NAME}_password_2024/" .env
+    sed -i '' "s/project1_password/${PROJECT_NAME}_password/" .env
     sed -i '' "s/PROJECT_DOMAINS_EXTRA=www.project1.local,api.project1.local/PROJECT_DOMAINS_EXTRA=www.$PROJECT_DOMAIN,api.$PROJECT_DOMAIN/" .env
 else
     # Linux
@@ -54,7 +52,7 @@ else
     sed -i "s/WEB_SERVER=apache/WEB_SERVER=$WEB_SERVER/" .env
     sed -i "s/project1_db/${PROJECT_NAME}_db/" .env
     sed -i "s/project1_user/${PROJECT_NAME}_user/" .env
-    sed -i "s/project1_password_2024/${PROJECT_NAME}_password_2024/" .env
+    sed -i "s/project1_password/${PROJECT_NAME}_password/" .env
     sed -i "s/PROJECT_DOMAINS_EXTRA=www.project1.local,api.project1.local/PROJECT_DOMAINS_EXTRA=www.$PROJECT_DOMAIN,api.$PROJECT_DOMAIN/" .env
 fi
 

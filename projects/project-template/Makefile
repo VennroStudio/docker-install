@@ -1,4 +1,3 @@
-# Project Makefile с исправленной логикой
 include .env
 export
 
@@ -24,7 +23,7 @@ check-infrastructure:
 		exit 1; \
 	fi
 
-# Создание БД в общей MariaDB (если используется)
+# Создание БД в общей MariaDB
 create-db-if-shared:
 ifeq ($(USE_SHARED_DB),true)
 	@echo "🗄️ Создание БД $(DB_NAME) в общей MariaDB..."

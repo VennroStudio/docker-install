@@ -1,11 +1,6 @@
-# =======================================================
-# ОБЩИЕ СЕРВИСЫ ДЛЯ ВСЕХ ПРОЕКТОВ
-# =======================================================
-# Запуск: docker compose -f infrastructure.yml up -d
-
 services:
 
-  # Traefik - общий reverse proxy для всех проектов
+  # Traefik
   traefik:
     container_name: ${INFRA_NAME}-traefik
     image: traefik:3.3
@@ -40,7 +35,7 @@ services:
       - traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https
       - traefik.http.middlewares.redirect-to-https.redirectScheme.permanent=true
 
-  # Общая MariaDB для всех проектов (опционально)
+  # MariaDB
   shared-mariadb:
     profiles: ["shared-db"]
     image: mariadb:10.6
@@ -53,7 +48,6 @@ services:
       - "${SHARED_DB_PORT}:3306"
     volumes:
       - shared-mariadb-data:/var/lib/mysql
-      - ./mariadb/init-shared.sql:/docker-entrypoint-initdb.d/init-shared.sql:ro
     networks:
       - shared-services
     command: >
@@ -62,7 +56,7 @@ services:
       --default-authentication-plugin=mysql_native_password
       --max-connections=200
 
-  # phpMyAdmin для общей БД
+  # phpMyAdmin
   shared-phpmyadmin:
     profiles: ["shared-db"]  
     image: phpmyadmin:latest
@@ -71,9 +65,9 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: ${INFRA_NAME}-mariadb
-      PMA_USER: root
-      PMA_PASSWORD: ${SHARED_DB_ROOT_PASSWORD}
-      PMA_ABSOLUTE_URI: https://pma.shared.local/
+      #PMA_USER: root
+      #PMA_PASSWORD: ${SHARED_DB_ROOT_PASSWORD}
+      PMA_ABSOLUTE_URI: https://${PMA_ABSOLUTE_URI}/
       UPLOAD_LIMIT: 64M
     networks:
       - traefik-public
@@ -83,12 +77,12 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.shared-pma.rule=Host(`pma.shared.local`)
+      - traefik.http.routers.shared-pma.rule=Host(`${PMA_ABSOLUTE_URI}`)
       - traefik.http.routers.shared-pma.entryPoints=https
       - traefik.http.routers.shared-pma.tls=true
       - traefik.http.routers.shared-pma.tls.certResolver=letsEncrypt
 
-  # Общий Redis (опционально)
+  # Redis
   shared-redis:
     profiles: ["shared-cache"]
     image: redis:7-alpine
@@ -102,7 +96,7 @@ services:
       - shared-services
     command: redis-server --appendonly yes
 
-  # MailHog для тестирования email
+  # MailHog
   mailhog:
     profiles: ["mailhog"]
     image: mailhog/mailhog:latest
@@ -123,7 +117,6 @@ services:
       - traefik.http.routers.mailhog.service=mailhog
       - traefik.http.services.mailhog.loadBalancer.server.port=8025
 
-# ✅ ИСПРАВЛЕНО: Внешние сети (созданы вручную)
 networks:
   traefik-public:
     external: true
