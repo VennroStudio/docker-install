@@ -1,0 +1,7 @@
+.env
+.env.local
+**/volumes/
+*.log
+.DS_Store
+projects/myproject
+projects/myproject2
