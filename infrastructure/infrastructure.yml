@@ -81,7 +81,7 @@ services:
       - traefik.http.routers.shared-pma.rule=Host(`${PMA_ABSOLUTE_URI}`)
       - traefik.http.routers.shared-pma.entryPoints=https
       - traefik.http.routers.shared-pma.tls=true
-      - traefik.http.routers.shared-pma.tls.certResolver=letsEncrypt
+      - traefik.http.routers.shared-pma.tls.certresolver=letsEncrypt
 
   # Redis
   shared-redis:

@@ -4,5 +4,5 @@
 *.log
 .DS_Store
 projects/myproject
-projects/myproject2
 .idea
+projects/wowbanner
